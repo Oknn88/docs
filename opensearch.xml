@@ -4,8 +4,8 @@
   <ShortName>SQB</ShortName>
   <Description>Search SQB</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://Oknn88.github.io/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://Oknn88.github.io/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://Oknn88.github.io/opensearch.xml" />
-  <moz:SearchForm>https://Oknn88.github.io/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://Oknn88.github.io/docs/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://Oknn88.github.io/docs/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://Oknn88.github.io/docs/opensearch.xml" />
+  <moz:SearchForm>https://Oknn88.github.io/docs/</moz:SearchForm>
 </OpenSearchDescription>
