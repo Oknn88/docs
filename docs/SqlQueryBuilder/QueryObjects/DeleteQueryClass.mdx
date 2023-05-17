@@ -1,0 +1,99 @@
+---
+title: DeleteQuery Class
+sidebar_position: 1
+slug: /sqlquerybuilder/queryobjects/deletequeryclass
+description: DeleteQuery Class
+keywords:
+  - methods
+  - delete
+  - query
+---
+
+## Construction
+
+SQB namespace, [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) have `delete()` function that creates SelectQuery instance.
+:::info
+A Query instance that created by [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) can be executed directly.
+:::
+    query = (sqb|pool|connection).delete([tableName])
+
+- `tableName`  (String|Raw) : String representation of table name or Raw sql object.
+
+```js
+const query = sqb.delete('customer')
+    .where(Op.eq('id', 1));
+```
+
+```sql
+Generated SQL for Postgres:
+delete from customer where id = 1
+```
+
+## Methods
+
+### DeleteQuery.prototype.from()
+
+Defines "from" part of delete `query`.
+
+`.from(tableName)`
+
+- `tableName` (String|Raw) : String representation of table name or Raw sql object.
+- **Returns**: DeleteQuery itself.
+
+```js
+const query = sqb.delete().from('customer');
+```
+
+```sql
+Generated SQL for Postgres:
+delete from customer
+```
+
+### DeleteQuery.prototype.where()
+
+Defines "where" part of `query`.
+
+`.where(..conditions)`
+
+- `conditions` :  [condition](/docs/docs/sqlquerybuilder/sqloperations#operators) arrays.
+- **Returns**: UpdateQuery itself.
+
+```js
+const query = sqb.delete('customer')
+    .where(Op.like('name', '%john%'));
+```
+
+```sql
+Generated SQL for Postgres:
+delete from customer where name like '%john%'
+```
+
+### Query.prototype.execute()
+
+Executes query and returns Promise. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+pool.delete('customer')
+    .where({name: '%john%'})
+    .execute({
+       autoCommit: true
+     }).then(() => {
+       console.log('Records deleted');
+     });
+```
+
+### Query.prototype.values()
+
+Sets execution values for query. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+const query = pool.delete('customer')
+    .where({'id': /Id/});
+....
+query.values({ID: request.values.ID})
+    .execute({
+       autoCommit: true
+     }).then(() => {
+       console.log('Records deleted');
+     });
+```

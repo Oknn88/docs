@@ -1,0 +1,108 @@
+---
+title: UpdateQuery Class
+sidebar_position: 4
+slug: /sqlquerybuilder/queryobjects/updatequeryclass
+description: UpdateQuery Class
+keywords:
+  - methods
+  - update
+  - query
+---
+
+## Construction
+
+SQB namespace, [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) have `update()` function that creates SelectQuery instance.
+:::info
+A Query instance that created by [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) can be executed directly.
+:::
+    query = (sqb|pool|connection).update(tableName)
+
+- `tableName` (String|Raw) : String representation of table name or Raw sql object.
+- `values`: Object that contains column/value pairs.
+
+```js
+var query = sqb.update('customer', {name:'John'})
+```
+
+```sql
+Generated SQL for Postgres:
+update customer set name = 'John'
+```
+
+## Methods
+
+### UpdateQuery.prototype.where()
+
+Defines "where" part of `query`.
+
+`.where(..conditions)`
+
+- `conditions`: [condition](/docs/docs/sqlquerybuilder/sqloperations#operators) arrays.
+- **Returns**: UpdateQuery itself.
+
+```js
+var query = sqb.update('customer', {name:'John'})
+    .where(['id', 1]);
+```
+
+```sql
+Generated SQL for Postgres:
+update customer set
+  name = 'John'
+where id = 1
+```
+
+### ReturningQuery.prototype.returning()
+
+Defines "returning" part of `query`.
+
+`.returning(obj)`
+
+- `obj` (Object): An object instance that defines returning parameters .
+- **Returns**: UpdateQuery itself.
+
+```js
+var query = sqb.update('customer', {name:'John'})
+    .where({'id': 1}).returning({
+      id: 'number',
+      name: 'string'
+    });
+```
+
+```sql
+Generated SQL for Oracle:
+update customer set
+  name = 'John'
+where id = 1
+returning id into :returning$id, name into :returning$name
+```
+
+### Query.prototype.execute()
+Executes query and returns Promise. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+pool.update('customer', {name: 'John'})
+    .where({'id': 1})
+    .execute({
+      autoCommit: true
+    }).then(result => {
+      console.log('Record updated');
+    });
+```
+
+### Query.prototype.values()
+
+Sets execution values for query. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+const query = pool.pool.update('customer', {name: /Name/})
+    .where({'id': /ID/});
+....
+query.values({ID: request.values.ID, Name: request.values.Name)
+    .execute({
+       autoCommit: true
+     }).then(result => {
+       console.log('Records inserted');
+     });
+```
+

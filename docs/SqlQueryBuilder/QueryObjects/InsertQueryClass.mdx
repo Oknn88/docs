@@ -1,0 +1,83 @@
+---
+title: InsertQuery Class
+sidebar_position: 2
+slug: /sqlquerybuilder/queryobjects/insertqueryclass
+description: InsertQuery Class
+keywords:
+  - methods
+  - insert
+  - query
+---
+
+## Construction
+
+SQB namespace, [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) have `insert()` function that creates SelectQuery instance.
+:::info
+A Query instance that created by [Pool](/docs/docs/connectionwrapper/poolclass) and [Connection](/docs/docs/connectionwrapper/connectionclass) can be executed directly.
+:::
+    query = (sqb|pool|connection).insert(tableName, values)
+
+- `tableName`  (String|Raw) : String representation of table name or Raw sql object.
+- `values` : Array of values with column order
+
+```js
+query = sqb.insert('customer', {id: 1, name: 'John'});
+```
+
+```sql
+Generated SQL for Postgres:
+insert into customer (id, name) values (1, 'John')
+```
+
+## Methods
+
+### ReturningQuery.prototype.returning()
+
+Defines "returning" part of delete `query`.
+
+`.returning(obj)`
+
+- `obj` (Object): An object instance that defines returning parameters .
+- **Returns**: UpdateQuery itself.
+
+```js
+var query = sqb.insert('customer', {name:'John'})
+    .returning({
+      id: 'number',
+      name: 'string'
+    });
+```
+
+```sql
+Generated SQL for Oracle:
+insert into customer (name) value ('John')
+returning id into :returning$id, name into :returning$name
+```
+
+### Query.prototype.execute()
+
+Executes query and returns Promise. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+pool.insert('customer', {id: 1, name: 'John'})
+    .execute({
+       autoCommit: true
+     }).then(result => {
+       console.log('Record inserted');
+     });
+```
+
+### Query.prototype.values()
+
+Sets execution values for query. Please check [executing queries](/docs/docs/connectionwrapper/executingqueries) section for details.
+
+```ts
+const query = pool.insert('customer', {id: /ID/, name: /Name/});
+....
+query.values({ID: request.values.ID, Name: request.values.Name)
+    .execute({
+       autoCommit: true
+     }).then(result => {
+       console.log('Records inserted');
+     });
+```
